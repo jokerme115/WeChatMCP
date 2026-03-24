@@ -1,7 +1,0 @@
-[mcp_servers.WeChatMCP]
-command = "node"
-args = ["C:\\path\\to\\WeChatMCP\\dist\\index.js"]
-
-[mcp_servers.WeChatMCP.env]
-WECHATMCP_CONFIG = "C:\\path\\to\\WeChatMCP\\wechatmcp.config.json"
-WECHATMCP_LOCAL_CONFIG = "C:\\path\\to\\WeChatMCP\\wechatmcp.local.json"
