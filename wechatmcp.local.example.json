@@ -1,0 +1,13 @@
+{
+  "connection": {
+    "mode": "launch",
+    "projectPath": "C:\\path\\to\\your\\mini-program",
+    "cliPath": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat"
+  },
+  "ciDefaults": {
+    "projectPath": "C:\\path\\to\\your\\mini-program",
+    "appid": "wx1234567890abcdef",
+    "privateKeyPath": "C:\\path\\to\\private.key",
+    "robot": 1
+  }
+}

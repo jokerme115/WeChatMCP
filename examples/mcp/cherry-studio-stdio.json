@@ -1,0 +1,12 @@
+{
+  "name": "WeChatMCP",
+  "type": "stdio",
+  "command": "node",
+  "args": [
+    "C:\\path\\to\\WeChatMCP\\dist\\index.js"
+  ],
+  "env": {
+    "WECHATMCP_CONFIG": "C:\\path\\to\\WeChatMCP\\wechatmcp.config.json",
+    "WECHATMCP_LOCAL_CONFIG": "C:\\path\\to\\WeChatMCP\\wechatmcp.local.json"
+  }
+}

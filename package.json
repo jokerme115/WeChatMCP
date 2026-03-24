@@ -1,0 +1,53 @@
+{
+  "name": "wechatmcp",
+  "version": "0.2.0",
+  "description": "WeChatMCP is a production-ready MCP server for WeChat Mini Program automation, DevTools control, and CI delivery.",
+  "type": "module",
+  "bin": {
+    "wechatmcp": "dist/index.js",
+    "weapp-dev-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "node --import tsx src/index.ts",
+    "dev:http": "node --import tsx src/index.ts --transport httpStream",
+    "start": "node dist/index.js",
+    "start:http": "node dist/index.js --transport httpStream",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "wechat",
+    "wechatmcp",
+    "mini-program",
+    "automation",
+    "devtools",
+    "streamable-http",
+    "fastmcp"
+  ],
+  "author": "WeChatMCP Contributors",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "AGENTS.example.md",
+    "wechatmcp.config.json",
+    "wechatmcp.local.example.json",
+    "examples"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "fastmcp": "^3.26.10",
+    "miniprogram-automator": "^0.12.1",
+    "miniprogram-ci": "^2.1.31",
+    "miniprogram-mp-ci": "^1.0.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.17.2",
+    "@types/node": "^20.12.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.4"
+  }
+}
