@@ -13,7 +13,7 @@ import {
 import { createTools } from "./tools.js";
 import { WeappAutomatorManager } from "./weappClient.js";
 
-const SERVER_VERSION = "0.3.1";
+const SERVER_VERSION = "0.3.0";
 const DEFAULT_SERVER_NAME = "WeChatMCP";
 const DEFAULT_INSTRUCTIONS =
   "WeChatMCP controls WeChat Mini Program projects through WeChat DevTools using automation, DevTools APIs, and CI upload tooling.";

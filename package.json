@@ -1,16 +1,8 @@
 {
   "name": "wechatmcp",
-  "version": "0.3.1",
+  "version": "0.3.0",
   "description": "WeChatMCP is an MCP server for WeChat Mini Program automation, DevTools control, and CI workflows with STDIO and Streamable HTTP transports.",
   "type": "module",
-  "homepage": "https://github.com/jokerme115/WeChatMCP#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jokerme115/WeChatMCP.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jokerme115/WeChatMCP/issues"
-  },
   "bin": {
     "wechatmcp": "dist/index.js",
     "weapp-dev-mcp": "dist/index.js"

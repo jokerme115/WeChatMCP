@@ -6,12 +6,10 @@ import { createElementTools } from "./tools/element.js";
 import { createMiniProgramTools } from "./tools/miniprogram.js";
 import { createNativeTools } from "./tools/native.js";
 import { createPageTools } from "./tools/page.js";
-import { createServerTools } from "./tools/server.js";
 import { WeappAutomatorManager } from "./weappClient.js";
 
 export function createTools(manager: WeappAutomatorManager): AnyTool[] {
   return [
-    ...createServerTools(),
     ...createApplicationTools(manager),
     ...createDevtoolsTools(),
     ...createCiTools(),
