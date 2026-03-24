@@ -15,7 +15,7 @@ import {
   toTextResult,
 } from "./common.js";
 import {
-  readLocalRuntimeConfig,
+  readMergedRuntimeConfig,
   resolveLocalRuntimeConfigPath,
   runtimeCiDefaultsSchema,
   writeLocalRuntimeConfig,
@@ -812,7 +812,7 @@ function readCiLocalConfig(configPath?: string): {
   ciDefaults?: z.infer<typeof runtimeCiDefaultsSchema>;
 } {
   try {
-    const config = readLocalRuntimeConfig({
+    const config = readMergedRuntimeConfig({
       localConfigPath: configPath,
     });
     return {

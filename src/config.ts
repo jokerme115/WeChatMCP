@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import {
-  readLocalRuntimeConfig,
+  readMergedRuntimeConfig,
   runtimeConnectionSchema,
 } from "./runtimeConfig.js";
 
@@ -56,7 +56,7 @@ export function resolveConfig(
   overrides?: ConnectionOverrides,
   previous?: WeappConnectionConfig
 ): WeappConnectionConfig {
-  const fileInput = readLocalRuntimeConfig().connection ?? {};
+  const fileInput = readMergedRuntimeConfig().connection ?? {};
   const envInput: ConnectionOverrides = connectionOverridesSchema.parse({
     mode: process.env.WEAPP_AUTOMATOR_MODE,
     cliPath: process.env.WECHAT_DEVTOOLS_CLI_PATH,

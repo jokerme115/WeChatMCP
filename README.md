@@ -1,12 +1,8 @@
 # WeChatMCP
 
-WeChatMCP 是一个面向微信小程序开发的本地 MCP Server。
+WeChatMCP 是一个面向微信小程序开发的 MCP Server，提供页面自动化、元素操作、开发者工具控制、预览、上传与成员管理能力。它同时支持 `STDIO` 与 `Streamable HTTP` 两种连接方式，既可以本地接入 Codex / Claude / Cursor / Cherry Studio，也可以作为一个自托管 MCP 服务对外提供远程连接。
 
-它通过 STDIO 方式运行，供支持 MCP 的客户端在本机调用，用于连接微信开发者工具、读取页面、操作元素、调用 DevTools CLI / HTTP 接口，以及执行小程序预览、上传等工作流。
-
-该服务依赖本地微信开发者工具、本地小程序工程路径以及本地上传私钥，因此适合在 ModelScope 中作为“仅本地可用”的 MCP 服务提交。
-
-## 服务配置
+## 服务配置（STDIO）
 
 ```json
 {
@@ -18,93 +14,52 @@ WeChatMCP 是一个面向微信小程序开发的本地 MCP Server。
         "wechatmcp@latest"
       ],
       "env": {
+        "WECHATMCP_CONFIG": "C:\\path\\to\\wechatmcp.config.json",
+        "WECHATMCP_LOCAL_CONFIG": "C:\\path\\to\\wechatmcp.local.json",
         "WEAPP_AUTOMATOR_MODE": "launch",
         "WEAPP_PROJECT_PATH": "C:\\path\\to\\your\\mini-program",
-        "WECHAT_DEVTOOLS_CLI_PATH": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+        "WECHAT_DEVTOOLS_CLI_PATH": "C:\\path\\to\\wechat-devtools\\cli.bat",
         "WEAPP_DEVTOOLS_PORT": "9420",
         "WEAPP_DEVTOOLS_TIMEOUT": "30000",
-        "WEAPP_TRUST_PROJECT": "true",
-        "WECHATMCP_LOCAL_CONFIG": "C:\\path\\to\\wechatmcp.local.json"
+        "WEAPP_TRUST_PROJECT": "true"
       }
     }
   }
 }
 ```
 
-## 环境变量说明
+## 服务配置（Streamable HTTP）
 
-- `WEAPP_AUTOMATOR_MODE`
-  控制连接模式，可选 `launch` 或 `connect`。
-- `WEAPP_PROJECT_PATH`
-  本地小程序项目路径。
-- `WECHAT_DEVTOOLS_CLI_PATH`
-  微信开发者工具 CLI 路径。
-- `WEAPP_DEVTOOLS_PORT`
-  微信开发者工具自动化端口。
-- `WEAPP_DEVTOOLS_TIMEOUT`
-  连接超时时间，单位毫秒。
-- `WEAPP_TRUST_PROJECT`
-  是否信任本地项目。
-- `WECHATMCP_LOCAL_CONFIG`
-  WeChatMCP 本地配置文件路径。
+```json
+{
+  "mcpServers": {
+    "WeChatMCP": {
+      "type": "streamable_http",
+      "url": "http://127.0.0.1:3333/mcp"
+    }
+  }
+}
+```
 
-## 功能概览
+## 服务介绍
 
-WeChatMCP 提供以下能力：
+WeChatMCP 把微信小程序相关的开发能力封装为 MCP 工具，便于模型直接调用：
 
 - 连接或拉起微信开发者工具
-- 获取当前页面、页面栈、系统信息、日志、截图
-- 查询页面元素、组件数据、WXML、DOM 属性与样式
-- 点击、输入、滚动、调用页面方法和组件方法
-- 调用微信开发者工具 CLI / HTTP 调试接口
-- 校验上传私钥
-- 生成预览二维码
-- 执行小程序上传
+- 读取当前页面、页面栈、日志、截图和页面数据
+- 查询元素属性、样式、WXML、组件数据与组件方法
+- 执行点击、输入、滚动、页面导航、调用 `wx.*`
+- 调用微信开发者工具 CLI 与 HTTP 调试接口
+- 校验上传私钥、生成预览二维码、执行上传
+- 进行云开发上传与成员管理
 
-## 常用工具
+## 运行模式
 
-- `mp_ensureConnection`
-- `mp_navigate`
-- `mp_currentPage`
-- `mp_getLogs`
-- `mp_screenshot`
-- `page_getElement`
-- `page_getElements`
-- `page_getElementByXpath`
-- `element_tap`
-- `element_input`
-- `element_getAttributes`
-- `element_getWxml`
-- `dt_httpPort`
-- `dt_httpRequest`
-- `dt_cli`
-- `ci_showDefaults`
-- `ci_saveDefaults`
-- `ci_validateKey`
-- `ci_quickPreview`
-- `ci_quickUpload`
-- `ci_preview`
-- `ci_upload`
+### STDIO
 
-## 使用要求
+适合本地 MCP Client 直接启动本服务，例如 Codex、Claude Desktop、Cursor、Cherry Studio。
 
-使用 WeChatMCP 前，请确保本机已经满足以下条件：
-
-- 已安装 Node.js 18+
-- 已安装微信开发者工具
-- 目标小程序项目可以在微信开发者工具中正常打开
-- 已在微信开发者工具中开启 `自动化`
-- 如需调用 DevTools HTTP 接口，已开启 `HTTP 调试`
-
-如需使用预览、上传或成员管理，还需要：
-
-- 小程序 `appid`
-- 代码上传私钥文件
-- 微信公众平台中的代码上传 IP 白名单
-
-## 本地部署
-
-如果你是从源码本地运行，而不是从 npm 安装，可以使用下面的方式：
+本地从源码运行：
 
 ```bash
 npm install
@@ -118,48 +73,175 @@ npm start
 npm run dev
 ```
 
-## 本地配置文件
+### Streamable HTTP
 
-WeChatMCP 支持通过本地配置文件保存连接信息和 CI 默认值。
+适合你把 WeChatMCP 部署到一台本机、开发机或服务器上，再通过 URL 暴露给支持远程 MCP 的客户端。
 
-默认文件名为：
+从源码运行：
 
-```text
-wechatmcp.local.json
+```bash
+npm install
+npm run build
+npm run start:http
 ```
 
-你可以从模板文件 `wechatmcp.local.example.json` 复制一份后自行填写。
+开发模式：
+
+```bash
+npm run dev:http
+```
+
+默认地址：
+
+- MCP Endpoint: `http://127.0.0.1:3333/mcp`
+- Health Endpoint: `http://127.0.0.1:3333/health`
+
+也可以使用参数覆盖：
+
+```bash
+node dist/index.js --transport httpStream --host 0.0.0.0 --port 3333 --endpoint /mcp
+```
+
+## 配置文件
+
+WeChatMCP 支持共享配置与本地私有配置同时存在：
+
+- `wechatmcp.config.json`
+  适合存放服务级默认值，例如传输模式、HTTP 监听地址、健康检查路径。
+- `wechatmcp.local.json`
+  适合存放本机项目路径、开发者工具路径、`appid`、`privateKeyPath` 等私有信息。
+
+配置优先级从低到高如下：
+
+1. `wechatmcp.config.json`
+2. `wechatmcp.local.json`
+3. 环境变量
+4. CLI 参数
+5. 工具调用参数
+
+项目已提供：
+
+- `.env.example`
+- `wechatmcp.config.json`
+- `wechatmcp.local.example.json`
+
+## 环境变量
+
+常用变量如下：
+
+- `WECHATMCP_CONFIG`
+  共享配置文件路径。
+- `WECHATMCP_LOCAL_CONFIG`
+  本地私有配置文件路径。
+- `WECHATMCP_TRANSPORT`
+  可选 `stdio`、`httpStream`、`streamable-http`。
+- `WECHATMCP_HOST`
+  Streamable HTTP 监听地址。
+- `WECHATMCP_PORT`
+  Streamable HTTP 监听端口。
+- `WECHATMCP_ENDPOINT`
+  Streamable HTTP MCP 路径。
+- `WECHATMCP_HEALTH_ENABLED`
+  是否开启健康检查。
+- `WECHATMCP_HEALTH_PATH`
+  健康检查路径。
+- `WEAPP_AUTOMATOR_MODE`
+  可选 `launch` 或 `connect`。
+- `WEAPP_PROJECT_PATH`
+  小程序项目路径。
+- `WEAPP_WS_ENDPOINT`
+  已打开微信开发者工具时的 websocket 地址。
+- `WECHAT_DEVTOOLS_CLI_PATH`
+  微信开发者工具 CLI 路径。
+- `WEAPP_DEVTOOLS_PORT`
+  开发者工具自动化端口。
+- `WEAPP_DEVTOOLS_TIMEOUT`
+  超时时间，单位毫秒。
+- `WEAPP_TRUST_PROJECT`
+  是否信任当前项目。
+
+## 常用工具
+
+- `mp_ensureConnection`
+- `mp_navigate`
+- `mp_currentPage`
+- `mp_getLogs`
+- `mp_screenshot`
+- `page_getElement`
+- `page_getElements`
+- `page_getData`
+- `page_callMethod`
+- `element_tap`
+- `element_input`
+- `element_getAttributes`
+- `element_getStyles`
+- `element_getWxml`
+- `dt_httpPort`
+- `dt_httpRequest`
+- `dt_cli`
+- `ci_showDefaults`
+- `ci_saveDefaults`
+- `ci_validateKey`
+- `ci_quickPreview`
+- `ci_quickUpload`
+- `ci_preview`
+- `ci_upload`
+- `mpci_manageMembers`
 
 ## 一条指令上传
 
-先通过 `ci_saveDefaults` 保存默认值：
+先通过 `ci_saveDefaults` 保存默认值，通常至少包含：
 
 - `projectPath`
 - `appid`
 - `privateKeyPath`
 - `robot`
 
-保存后可直接调用：
+保存之后即可直接调用：
 
 - `ci_quickPreview`
 - `ci_quickUpload`
 
-如果不传 `version`，系统会自动生成版本号。
+如果不传 `version`，WeChatMCP 会自动生成版本号。
 
-## ModelScope 提交建议
+## 使用要求
 
-如果你准备将本项目提交到 ModelScope MCP 广场，建议：
+使用本服务前，请确认：
 
-- 创建方式：从 GitHub 仓库快速创建
-- 托管类型：仅本地可用
+- 已安装 Node.js 18+
+- 已安装微信开发者工具
+- 目标小程序项目可以在微信开发者工具中正常打开
+- 已在微信开发者工具中开启“自动化”
+- 如需使用 HTTP 调试工具，已开启“HTTP 调试”
 
-原因是该服务依赖本地微信开发者工具、本地项目路径和本地私钥，不适合远程托管部署。
+如需使用预览、上传、成员管理，还需要：
+
+- 小程序 `appid`
+- 代码上传私钥文件
+- 微信公众平台中的上传 IP 白名单
+
+## ModelScope 提交说明
+
+本 README 严格保留了可解析的 `STDIO` 配置代码块，便于 ModelScope 在“从 GitHub 仓库快速创建”时提取基础服务配置。
+
+按 ModelScope 当前规则：
+
+- 根目录必须存在 `README.md`
+- README 里必须包含有效的 `STDIO` 服务配置
+- `STDIO` 配置建议使用 `npx` 或 `uvx`
+- JSON 代码块中不能写注释
+
+如果你要在 ModelScope 上同时声明 `Streamable HTTP`：
+
+- 快速创建时，优先依赖上面的 `STDIO` 配置完成解析
+- 创建成功后，可在服务设置页补充或修改 `Streamable HTTP` 配置
+- 也可以直接使用 ModelScope 的“自定义创建”方式填写 `Streamable HTTP`
 
 ## 安全说明
 
-- 不要将私钥正文写入仓库
-- 推荐只在本地配置中保存 `privateKeyPath`
-- 如果私钥曾在公开场景暴露，请及时轮换
+- 不要把私钥正文写入仓库
+- 推荐只在 `wechatmcp.local.json` 中保存 `privateKeyPath`
+- 如果私钥曾经暴露，请立即轮换
 
 ## License
 
