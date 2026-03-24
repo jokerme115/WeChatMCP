@@ -1,6 +1,6 @@
 # WeChatMCP
 
-WeChatMCP 是一个面向微信小程序开发的 MCP Server，提供页面自动化、元素操作、开发者工具控制、预览、上传与成员管理能力。它同时支持 `STDIO` 与 `Streamable HTTP` 两种连接方式，既可以本地接入 Codex / Claude / Cursor / Cherry Studio，也可以作为一个自托管 MCP 服务对外提供远程连接。
+WeChatMCP 是一个面向微信小程序开发的 MCP Server，提供页面自动化、元素操作、开发者工具控制、预览、上传与成员管理能力。它同时支持 `STDIO` 与 `Streamable HTTP` 两种连接方式，适合本地接入 Codex / Claude / Cursor / Cherry Studio，或在你自己的机器上自托管后远程连接。
 
 ## 服务配置（STDIO）
 
@@ -219,23 +219,6 @@ WeChatMCP 支持共享配置与本地私有配置同时存在：
 - 小程序 `appid`
 - 代码上传私钥文件
 - 微信公众平台中的上传 IP 白名单
-
-## ModelScope 提交说明
-
-本 README 严格保留了可解析的 `STDIO` 配置代码块，便于 ModelScope 在“从 GitHub 仓库快速创建”时提取基础服务配置。
-
-按 ModelScope 当前规则：
-
-- 根目录必须存在 `README.md`
-- README 里必须包含有效的 `STDIO` 服务配置
-- `STDIO` 配置建议使用 `npx` 或 `uvx`
-- JSON 代码块中不能写注释
-
-如果你要在 ModelScope 上同时声明 `Streamable HTTP`：
-
-- 快速创建时，优先依赖上面的 `STDIO` 配置完成解析
-- 创建成功后，可在服务设置页补充或修改 `Streamable HTTP` 配置
-- 也可以直接使用 ModelScope 的“自定义创建”方式填写 `Streamable HTTP`
 
 ## 安全说明
 
